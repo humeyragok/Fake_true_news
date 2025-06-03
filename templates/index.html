@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <title>Haber Gerçeklik Analizi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background: linear-gradient(120deg, #7f53ac 0%, #647dee 100%);
+        min-height: 100vh;
+        font-family: 'Montserrat', sans-serif;
+      }
+      .analyze-card {
+        border-radius: 1.5rem;
+        box-shadow: 0 16px 32px rgba(44, 62, 80, 0.18);
+        padding: 2.3rem 2.5rem 2rem 2.5rem;
+        background: #fff;
+        margin-top: 30px;
+      }
+      .ai-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 16px;
+        filter: drop-shadow(0 0 12px #647dee99);
+      }
+      .title-gradient {
+        background: linear-gradient(90deg, #7f53ac 25%, #647dee 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .btn-analyze {
+        background: linear-gradient(90deg, #7f53ac 25%, #647dee 100%);
+        color: #fff;
+        border: none;
+        font-size: 1.2rem;
+        border-radius: 2rem;
+        box-shadow: 0 8px 20px rgba(100,125,222,0.15);
+        transition: transform 0.1s, box-shadow 0.1s;
+      }
+      .btn-analyze:hover {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 16px 32px rgba(100, 125, 222, 0.22);
+      }
+      /* SONUÇ animasyon ve stil */
+      .result-anim {
+        margin-top: 32px;
+        text-align: center;
+        animation: popfade 0.6s;
+      }
+      @keyframes popfade {
+        0% { transform:scale(0.7); opacity: 0; }
+        85% { transform:scale(1.07);}
+        100% { transform:scale(1); opacity: 1; }
+      }
+      .result-icon {
+        font-size: 2.4rem;
+        display: block;
+        margin: 0 auto 10px auto;
+      }
+      .result-real {
+        color: #27ae60;
+        text-shadow: 0 2px 10px #a8ff78aa;
+      }
+      .result-fake {
+        color: #e74c3c;
+        text-shadow: 0 2px 10px #ff5858aa;
+      }
+      .result-badge {
+        font-size: 1.18rem;
+        background: #fff;
+        border-radius: 1.2em;
+        padding: 0.7em 2.1em;
+        box-shadow: 0 2px 14px rgba(100, 125, 222, 0.13);
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        display: inline-block;
+      }
+      .footer-info {
+        margin-top: 2.5rem;
+        font-size: 0.98rem;
+        color: #6b7a99;
+        opacity: 0.82;
+      }
+      textarea.form-control {
+        resize: vertical;
+        min-height: 120px;
+        font-size: 1.05rem;
+        font-family: 'Montserrat', sans-serif;
+      }
+      @media (max-width: 576px) {
+        .analyze-card {
+          padding: 1.1rem 0.7rem;
+        }
+        .ai-icon {
+          width: 45px;
+          height: 45px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+      <div class="row w-100">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <div class="analyze-card">
+            <div class="text-center">
+              <!-- AI themed SVG icon -->
+              <svg class="ai-icon" fill="none" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="30" fill="#647dee" opacity="0.22"/>
+                <path d="M32 14a18 18 0 1 1 0 36a18 18 0 0 1 0-36zm0 4a14 14 0 1 0 0 28a14 14 0 0 0 0-28zm0 8a6 6 0 1 1 0 12a6 6 0 0 1 0-12z" fill="#7f53ac"/>
+              </svg>
+            </div>
+            <h1 class="mb-4 text-center title-gradient">Haber Gerçeklik Analizi</h1>
+            <form method="post">
+              <div class="mb-3">
+                <label for="haber" class="form-label" style="font-weight:600;">Haberi buraya yapıştırınız:</label>
+                <textarea class="form-control shadow-sm" id="haber" name="haber" rows="6" placeholder="Örneğin: 'Türkiye'de yeni bir teknoloji fuarı düzenlendi...'"></textarea>
+              </div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-analyze btn-lg">
+                  <span style="font-weight:600;letter-spacing:1px;">Tahmin Et</span>
+                </button>
+              </div>
+            </form>
+            {% if prediction %}
+              <div class="result-anim">
+                {% if prediction == 'Gerçek' %}
+                  <span class="result-icon result-real">✔️</span>
+                  <span class="result-badge result-real">SONUÇ: {{ prediction }}</span>
+                {% else %}
+                  <span class="result-icon result-fake">❌</span>
+                  <span class="result-badge result-fake">SONUÇ: {{ prediction }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+            <div class="footer-info text-center">
+              <em>Yapay Zeka Destekli Haber Analizi &copy; 2025</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap JS (isteğe bağlı) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
